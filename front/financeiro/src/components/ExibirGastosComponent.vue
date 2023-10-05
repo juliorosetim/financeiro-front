@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <!-- Seção do formulário -->
     <v-card>
       <div class="form-cadastro">
         <h2>Transações</h2>
@@ -30,33 +29,59 @@
       </div>
     </v-card>
 
-    <div style="display: flex">
+    <h2>Totais</h2>
+
+    <div class="wrapCard">
       <div class="card">
-        <label> Gastos do mês </label>
-        <label>4000,00</label>
+        <span>Periodo</span>
+        <div v-for="gasto in gastosPorDatas" :key="index">
+          <label>
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
       </div>
 
       <div class="card">
-        <label> Gastos por Cartão </label>
-        <label>1000,00</label>
+        <span>Cartão</span>
+        <div v-for="gasto in gastosPorCartao" :key="index">
+          <label>
+            {{ gasto.deDescricao }}:
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
       </div>
 
       <div class="card">
-        <label> Gastos por Categoria </label>
-        <label>1000,00</label>
+        <span>Forma de pagamento</span>
+        <div v-for="gasto in gastosPorFormaPgto" :key="index">
+          <label>
+            {{ gasto.deDescricao }}:
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
       </div>
 
       <div class="card">
-        <label> Total por Forma de Pagamento </label>
-        <label>1000,00</label>
+        <span>Categoria</span>
+        <div v-for="gasto in gastosPorCategoria" :key="index">
+          <label>
+            {{ gasto.deDescricao }}:
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
       </div>
 
       <div class="card">
-        <label> Total por Grupo </label>
-        <label>1000,00</label>
+        <span>Grupo</span>
+        <div v-for="gasto in gastosPorGrupo" :key="index">
+          <label>
+            {{ gasto.deDescricao }}:
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
       </div>
     </div>
-    <v-card style="padding-top: 30px">
+    <!-- <v-card style="padding-top: 30px">
       <div>
         <h2 style="padding-bottom: 10px">Lista de Lançamentos</h2>
         <v-simple-table>
@@ -84,7 +109,7 @@
           </template>
         </v-simple-table>
       </div>
-    </v-card>
+    </v-card> -->
   </v-container>
 </template>
 
@@ -93,17 +118,36 @@ import "@/assets/css/form-styles.css";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { ParcelasGastosDto } from "@/type/ParcelasGastosDto";
+import { GastosPorCartao } from "@/type/GastosPorCartao";
+import { GastosPorFormaPgto } from "@/type/GastosPorFormaPgto";
+import { GastosPorCategoria } from "@/type/GastosPorCategoria";
+import { GastosPorGrupo } from "@/type/GastosPorGrupo";
+import { GastosPorDatas } from "@/type/GastosPorDatas";
 import Uteis from "@/service/Uteis";
 
 const dtFiltroInicio = ref("");
 const dtFiltroFim = ref("");
 
 const parcelasGastos = ref<ParcelasGastosDto[]>([]);
+const gastosPorCartao = ref<GastosPorCartao[]>([]);
+const gastosPorFormaPgto = ref<GastosPorFormaPgto[]>([]);
+const gastosPorCategoria = ref<GastosPorCategoria[]>([]);
+const gastosPorGrupo = ref<GastosPorGrupo[]>([]);
+const gastosPorDatas = ref<GastosPorDatas[]>([]);
 
 const fetchGastos = () => {
+  fetchGastosPeriodo();
+  fetchGastosPorCartoes();
+  fetchGastosPorFormaPgto();
+  fetchGastosPorCategoria();
+  fetchGastosPorGrupo();
+  fetchGastosPorDatas();
+};
+
+const fetchGastosPeriodo = () => {
   axios
     .get(
-      `http://localhost:8081/api/parcelas/parcelas-por-datas/${dtFiltroInicio.value}/${dtFiltroFim.value}`
+      `http://localhost:8081/api/parcelas/parcelas-por-datas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
       console.log(response.data);
@@ -111,6 +155,76 @@ const fetchGastos = () => {
     })
     .catch((error) => {
       console.error("Erro ao buscar gastos:", error);
+    });
+};
+
+const fetchGastosPorCartoes = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-por-cartoes/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      gastosPorCartao.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos por cartões", error);
+    });
+};
+
+const fetchGastosPorFormaPgto = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-por-forma-pgto/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      gastosPorFormaPgto.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos por Forma de pagamento", error);
+    });
+};
+
+const fetchGastosPorCategoria = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-por-categorias/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      gastosPorCategoria.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos por Categorias", error);
+    });
+};
+
+const fetchGastosPorGrupo = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-por-grupo/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      gastosPorGrupo.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos por grupo", error);
+    });
+};
+
+const fetchGastosPorDatas = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-por-datas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      gastosPorDatas.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos por Datas", error);
     });
 };
 
@@ -140,15 +254,7 @@ onMounted(() => {
 
   fetchGastos();
 });
-
-const formatarValorMonetario = (valor: number) => {
-  return valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-};
 </script>
-
 
 <style scoped>
 .col-descricao {

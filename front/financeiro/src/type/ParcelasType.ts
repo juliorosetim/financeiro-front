@@ -7,25 +7,24 @@ export type Parcelas = {
   conferido: string;
   nuParcela: number;
   gasto: {
-    deFatura: string
-    deDescricao: string
+    deFatura: string;
+    deDescricao: string;
     grupo: {
-      cdGrupo: number
-    },
+      cdGrupo: number;
+    };
     formaPagto: {
-      cdFormaPagto: number
-    },
+      cdFormaPagto: number;
+    };
     cartao: {
-      cdCartao: number
-    },
-    qtdeParcela: number
-    nuParcela: number
-    vlrParcela: number
-    vlrTotal: number
+      cdCartao: number;
+    };
+    qtdeParcela: number;
+    nuParcela: number;
+    vlrParcela: number;
+    vlrTotal: number;
     dtPrimeiraParcela: string;
     usuario: {
-      cdUsuario: number
-    }
-  }
-
-}
+      cdUsuario: number;
+    };
+  };
+};

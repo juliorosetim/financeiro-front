@@ -13,4 +13,3 @@ import Home from "@/components/HomeComponent.vue";
 <script lang="ts" setup>
 import Gasto from "@/components/ExibirGastosComponent.vue";
 </script>
-

@@ -10,4 +10,4 @@ export type ParcelasGastosDto = {
   nuParcela: number;
   deCartao: string;
   deCategoria: string;
-}
+};

@@ -14,6 +14,16 @@
           />
           <label class="user-label">Categoria</label>
         </div>
+        <div class="input-group">
+          <input
+            type="text"
+            id="metaMensal"
+            v-model="metaMensal"
+            required
+            class="input"
+          />
+          <label class="user-label">Meta mensal</label>
+        </div>
         <button
           class="button-custom"
           @click="cadastrarCategoria"
@@ -33,6 +43,7 @@
             <thead>
               <tr>
                 <th class="text-left" style="width: 1000px">Categoria</th>
+                <th class="text-left" style="width: 1000px">Meta</th>
                 <th class="text-left"></th>
                 <th class="text-left"></th>
               </tr>
@@ -40,6 +51,9 @@
             <tbody>
               <tr v-for="categoria in categorias" :key="categoria.cdCategoria">
                 <td>{{ categoria.deCategoria }}</td>
+                <td>
+                  {{ Uteis.formatarValorMonetario(categoria.metaMensal) }}
+                </td>
                 <td>
                   <span class="button-grid" @click="exibirCategoria(categoria)"
                     ><v-icon>mdi mdi-text-box-edit-outline</v-icon></span
@@ -72,15 +86,19 @@
   </v-container>
 </template>
 
-  <script setup lang="ts">
+<script setup lang="ts">
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { Categoria } from "@/type/CategoriaType";
 import "@/assets/css/form-styles.css";
 import SnackBarComponent from "./SnackBarComponent.vue";
+import Constantes from "@/service/Constantes";
+import Uteis from "@/service/Uteis";
 
 const deCategoria = ref("");
 const cdCategoria = ref<number | null>(null);
+
+const metaMensal = ref<number | null>(null);
 
 const categorias = ref<Categoria[]>([]);
 
@@ -100,11 +118,13 @@ const cadastrarCategoria = () => {
     .post("http://localhost:8081/api/categoria", {
       cdCategoria: cdCategoria.value,
       deCategoria: deCategoria.value,
+      metaMensal: metaMensal.value,
     })
     .then((response) => {
       console.log("Categoria cadastrada com sucesso!", response.data);
       deCategoria.value = "";
       cdCategoria.value = null;
+      metaMensal.value = null;
 
       fetchCategorias();
     })
@@ -116,6 +136,7 @@ const cadastrarCategoria = () => {
 const cancelar = () => {
   deCategoria.value = "";
   cdCategoria.value = null;
+  metaMensal.value = null;
 };
 
 const fetchCategorias = () => {
@@ -147,9 +168,11 @@ const excluirCategoria = (cdCategoria: number) => {
 const exibirCategoria = (categoria: Categoria) => {
   cdCategoria.value = categoria.cdCategoria;
   deCategoria.value = categoria.deCategoria;
+  metaMensal.value = categoria.metaMensal;
 };
 
 onMounted(() => {
   fetchCategorias();
+  console.log(Constantes.URL_API);
 });
 </script>

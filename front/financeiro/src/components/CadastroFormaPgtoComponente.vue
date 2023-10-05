@@ -166,4 +166,3 @@ onMounted(() => {
   fetchFormaPagto();
 });
 </script>
-

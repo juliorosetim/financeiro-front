@@ -186,5 +186,3 @@ onMounted(() => {
   fetchUsuarios();
 });
 </script>
-
-

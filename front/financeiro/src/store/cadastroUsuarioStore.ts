@@ -1,7 +1,4 @@
-import { defineStore } from 'pinia'
-import CadastroUsuarioService from '@/service/CadastroUsuarioService'
+import { defineStore } from "pinia";
+import CadastroUsuarioService from "@/service/CadastroUsuarioService";
 
-export const cadastroUsuarioStore = defineStore('cadastroUsuarioStore', {
-
-       
-})
+export const cadastroUsuarioStore = defineStore("cadastroUsuarioStore", {});

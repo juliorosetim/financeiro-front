@@ -202,4 +202,3 @@ onMounted(() => {
   fetchCartoes();
 });
 </script>
-

@@ -5,18 +5,18 @@
  */
 
 // Components
-import App from './App.vue';
-import '@mdi/font/css/materialdesignicons.css';
+import dotenv from "dotenv";
+import App from "./App.vue";
+import "@mdi/font/css/materialdesignicons.css";
 
 // Composables
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
 // Plugins
-import { registerPlugins } from '@/plugins';
-import Vuetify from './plugins/vuetify';
-import 'vuetify/dist/vuetify.min.css';
-
+import { registerPlugins } from "@/plugins";
+import Vuetify from "./plugins/vuetify";
+import "vuetify/dist/vuetify.min.css";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -26,5 +26,4 @@ app.use(Vuetify);
 
 registerPlugins(app);
 
-app.mount('#app');
-
+app.mount("#app");
