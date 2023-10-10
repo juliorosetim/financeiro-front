@@ -105,7 +105,6 @@
 
 <script setup lang="ts">
 import "@/assets/css/form-styles.css";
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import Usuario from "@/type/usuarioType";
 import CadastroUsuarioStore from "@/store/cadastroUsuarioStore";
@@ -141,27 +140,6 @@ const cadastrarUsuario = async () => {
   };
 
   const response = await storeUsuario.saveUsuario(usuarioSave);
-  // axios
-  //   .post("http://localhost:8081/api/usuario", {
-  //     cdUsuario: cdUsuario.value,
-  //     deUsuario: nome.value,
-  //     senha: senha.value,
-  //     flAtivo: ativo.value,
-  //   })
-  //   .then((response) => {
-  //     nome.value = "";
-  //     senha.value = "";
-  //     confirmacaoSenha.value = "";
-  //     ativo.value = "S";
-  //     cdUsuario.value = null;
-
-  //     fetchUsuarios();
-  //   })
-  //   .catch((error) => {
-  //     snackBar.value.msg = error.response.data.errors[0].defaultMessage;
-  //     snackBar.value.show = true;
-  //     snackBar.value.color = "#d11e48";
-  //   });
 };
 
 const exibirUsuario = (usuario: Usuario) => {

@@ -90,13 +90,15 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { FormaPagto } from "@/type/FormaPagtoType";
 import "@/assets/css/form-styles.css";
-import SnackBarComponent from "./SnackBarComponent.vue";
+import FormaPgtoStore from "@/store/FormaPgtoStore";
+import { storeToRefs } from "pinia";
 
-const cdFormaPagto = ref<number | null>(null);
-const deFormaPagto = ref("");
-const tipo = ref("");
+const storeFormaPgto = FormaPgtoStore();
 
-const formasPagto = ref<FormaPagto[]>([]);
+const { cdFormaPagto, deFormaPagto, tipo, formasPagto } =
+  storeToRefs(storeFormaPgto);
+
+const { getFormasPgto, saveFormaPgto, deleteFormaPgto } = storeFormaPgto;
 
 const snackBar = ref({
   show: false,
@@ -104,25 +106,26 @@ const snackBar = ref({
   color: "",
 });
 
-const cadastrarFormaPagto = () => {
-  axios
-    .post("http://localhost:8081/api/formapagto", {
-      cdFormaPagto: cdFormaPagto.value,
-      deFormaPagto: deFormaPagto.value,
-      tipo: tipo.value,
-    })
-    .then((response) => {
-      deFormaPagto.value = "";
-      cdFormaPagto.value = null;
-      tipo.value = "";
+const cadastrarFormaPagto = async () => {
+  const formaPagtoSave = {
+    deFormaPagto: deFormaPagto.value,
+    tipo: tipo.value,
+    cdFormaPagto: cdFormaPagto.value,
+  };
 
-      fetchFormaPagto();
-    })
-    .catch((error) => {
-      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  const response = await saveFormaPgto(formaPagtoSave);
+
+  cancelar();
+
+  console.log(response);
+
+  if (response!.hasError) {
+    const msgErro = response!.error!.message;
+
+    snackBar.value.msg = msgErro;
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+  }
 };
 
 const cancelar = () => {
@@ -131,30 +134,20 @@ const cancelar = () => {
   tipo.value = "";
 };
 
-const fetchFormaPagto = () => {
-  axios
-    .get("http://localhost:8081/api/formapagto")
-    .then((response) => {
-      formasPagto.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de formas de pagamento:", error);
-    });
+const fetchFormaPagto = async () => {
+  await getFormasPgto();
 };
 
-const excluirFormaPagto = (cdFormaPagto: number) => {
-  axios
-    .delete(`http://localhost:8081/api/formapagto/${cdFormaPagto}`)
-    .then(() => {
-      fetchFormaPagto();
-    })
-    .catch((error) => {
-      const msgErro = error.response.data.message;
+const excluirFormaPagto = async (cdFormaPagto: number) => {
+  const response = await deleteFormaPgto(cdFormaPagto);
 
-      snackBar.value.msg = msgErro.substring(49, msgErro.length);
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  if (response!.hasError) {
+    const msgErro = response!.error!.message;
+
+    snackBar.value.msg = msgErro.substring(49, msgErro.length);
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+  }
 };
 
 const exibirFormaPagto = (formaPagto: FormaPagto) => {

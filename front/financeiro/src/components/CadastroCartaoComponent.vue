@@ -106,15 +106,11 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { Cartao } from "@/type/CartaoType";
 import "@/assets/css/form-styles.css";
-
-const cdCartao = ref<number | null>(null);
-const deCartao = ref("");
-const diaVirada = ref("");
-const diaVencimento = ref("");
+import CartaoStore from "@/store/CartaoStore";
+import { storeToRefs } from "pinia";
 
 const snackBar = ref({
   show: false,
@@ -122,77 +118,46 @@ const snackBar = ref({
   color: "",
 });
 
-const cartoes = ref<Cartao[]>([]);
+const storeCartao = CartaoStore();
 
-const cadastrarCartao = () => {
-  // if (deCartao.value === "") {
-  //   alert("Preencha o campo Cartão");
-  //   return;
-  // }
+const { cdCartao, deCartao, diaVirada, diaVencimento, cartoes } =
+  storeToRefs(storeCartao);
 
-  // if (diaVirada.value === "") {
-  //   alert("Preencha o campo Dia virada do Cartão");
-  //   return;
-  // }
+const { getCartoes, saveCartao, deleteCartao } = storeCartao;
 
-  // if (diaVencimento.value === "") {
-  //   alert("Preencha o campo Vencimento do Cartão");
-  //   return;
-  // }
+const cadastrarCartao = async () => {
+  const cartaoSave = {
+    cdCartao: cdCartao.value,
+    deCartao: deCartao.value,
+    diaVirada: diaVirada.value,
+    diaVencimento: diaVencimento.value,
+  };
+  const response = await storeCartao.saveCartao(cartaoSave);
 
-  axios
-    .post("http://localhost:8081/api/cartao", {
-      cdCartao: cdCartao.value,
-      deCartao: deCartao.value,
-      diaVirada: diaVirada.value,
-      diaVencimento: diaVencimento.value,
-    })
-    .then((response) => {
-      deCartao.value = "";
-      diaVirada.value = "";
-      diaVencimento.value = "";
-      cdCartao.value = null;
-
-      fetchCartoes();
-    })
-    .catch((error) => {
-      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  cancelar();
 };
 
 const cancelar = () => {
   deCartao.value = "";
-  diaVirada.value = "";
-  diaVencimento.value = "";
+  diaVirada.value = null;
+  diaVencimento.value = null;
   cdCartao.value = null;
 };
 
-const fetchCartoes = () => {
-  axios
-    .get("http://localhost:8081/api/cartao")
-    .then((response) => {
-      cartoes.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de cartões:", error);
-    });
+const fetchCartoes = async () => {
+  await getCartoes();
 };
 
-const excluirCartao = (cdCartao: number) => {
-  axios
-    .delete(`http://localhost:8081/api/cartao/${cdCartao}`)
-    .then(() => {
-      fetchCartoes();
-    })
-    .catch((error) => {
-      const msgErro = error.response.data.message;
+const excluirCartao = async (cdCartao: number) => {
+  const response = await deleteCartao(cdCartao);
 
-      snackBar.value.msg = msgErro.substring(49, msgErro.length);
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  if (response!.hasError) {
+    const msgErro = response!.error!.message;
+
+    snackBar.value.msg = msgErro.substring(49, msgErro.length);
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+  }
 };
 
 const exibirCartao = (cartao: Cartao) => {

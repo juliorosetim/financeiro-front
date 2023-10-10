@@ -1,26 +1,23 @@
 import { Cartao } from "@/type/CartaoType";
 import axios from "axios";
 import { RemoteError, Response } from "./Rest";
+import { handleApiResponse } from "@/Utils/request";
 
 class CartaoService {
-  public async findAllCartoes(): Promise<Response<Cartao>> {
-    const response = new Response<Cartao>();
+  public async getCartoes(): Promise<Response<Cartao[]>> {
+    const url = "http://localhost:8081/api/cartao";
 
-    try {
-      const data = await axios.get("http://localhost:8081/api/cartao");
-      response.content = data.data;
-    } catch (e) {
-      response.error = this.remoteError(e);
-    }
-
-    return response;
+    return handleApiResponse(() => axios.get(url));
   }
 
-  private remoteError(error: any): RemoteError {
-    return {
-      message: error.response.data.message,
-      code: error.response.data.status,
-    } as RemoteError;
+  public async saveCartao(cartao: Cartao): Promise<Response<Cartao>> {
+    const url = "http://localhost:8081/api/cartao";
+    return handleApiResponse(() => axios.post(url, cartao));
+  }
+
+  public async deleteCartao(cdCartao: number): Promise<Response<Cartao>> {
+    const url = `http://localhost:8081/api/cartao/${cdCartao}`;
+    return handleApiResponse(() => axios.delete(url));
   }
 }
 
