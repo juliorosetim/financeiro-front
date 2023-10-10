@@ -7,7 +7,11 @@
   --cor-branca: #fff;
   --cor-cinza-claro: #fcfdff;
   --border-radios: 10px;
-  --cor-verde-linha-grid: #aef8ae;
+  --cor-linha-grid: #c9c9c9da;
+}
+
+main {
+  height: 100vh;
 }
 
 body {
@@ -33,6 +37,12 @@ h2 {
   color: var(--cor-verde-claro) !important;
 }
 
+/* CSS v-select --------------------------------------------------------------------------*/
+
+.v-select {
+  color: var(--cor-verde-claro) !important;
+}
+
 /* CSS inputs --------------------------------------------------------------------------*/
 .input-group {
   position: relative;
@@ -50,6 +60,7 @@ h2 {
   padding: 1rem;
   font-size: 15px;
   color: var(--cor-verde-claro);
+  border-color: var(--cor-verde-claro);
   transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -71,6 +82,7 @@ input:valid {
 input:valid ~ label {
   transform: translateY(-5%) scale(0.8);
   background-color: #f9f9f9;
+  border-color: var(--cor-verde-claro);
 
   color: var(--cor-verde);
 }
@@ -124,6 +136,57 @@ input:valid ~ label {
   transition: background 0s;
 }
 
+/* CSS Button NOVO -------------------------------------------------------------------------------------------------*/
+.button-novo {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  /* display: inline-block !important; */
+  line-height: 1.6em !important;
+  margin: 3px !important;
+  overflow: hidden !important;
+  border: 2px solid var(--cor-verde-claro) !important;
+  transition: color 0.5s !important;
+  z-index: 1 !important;
+  font-size: 24px !important;
+  border-radius: 5px 20px 5px;
+  /* border: none !important; */
+  font-weight: 350 !important;
+  color: var(--cor-branca) !important;
+  background-color: var(--cor-verde-claro);
+  padding: 10px 10px;
+}
+
+.button-novo:before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  background: var(--cor-verde) !important;
+  height: 150px !important;
+  width: 200px !important;
+  border-radius: 5px 20px 5px;
+}
+
+.button-novo:hover {
+  color: var(--cor-branca) !important;
+}
+
+.button-novo:before {
+  top: 100% !important;
+  left: 100% !important;
+  transition: all 0.3s !important;
+}
+
+.button-novo:hover:before {
+  top: -30px !important;
+  left: -30px !important;
+}
+
+.button-novo:active:before {
+  /* background: var(--cor-verde-claro) !important; */
+  transition: background 0s !important;
+}
 /* CSS Button Grid -------------------------------------------------------------------------------------------------*/
 .button-grid {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
@@ -173,8 +236,7 @@ input:valid ~ label {
 }
 
 /* CSS Grid --------------------------------------------------------------------------*/
-th,
-td {
+th {
   /* padding: 10px 10px 10px 10px !important; */
   padding-top: 0px !important;
   padding-left: 10px;
@@ -185,14 +247,26 @@ td {
   width: 100%;
 }
 
+td {
+  /* padding: 10px 10px 10px 10px !important; */
+  padding-top: 0px !important;
+  padding-left: 10px;
+  padding-bottom: 0px;
+  padding-right: 10px;
+  height: 40px !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  width: 100%;
+  border-bottom: 1px solid var(--cor-linha-grid);
+}
+
 thead {
   background-color: var(--cor-verde-claro) !important;
   color: var(--cor-branca) !important;
 }
 
-tr:nth-child(even) {
-  background-color: var(--cor-verde-linha-grid) !important;
-}
+/* tr:nth-child(even) {
+  background-color: var(--cor-linha-grid) !important;
+} */
 
 /* CSS v-select --------------------------------------------------------------------------*/
 

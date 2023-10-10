@@ -73,11 +73,15 @@
         </v-simple-table>
       </div>
     </v-card>
-    <SnackBarComponent
-      :msg="snackBar.msg"
-      :show="snackBar.show"
+
+    <v-snackbar
+      rounded="pill"
+      :timeout="2000"
+      v-model="snackBar.show"
       :color="snackBar.color"
-    />
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -101,11 +105,6 @@ const snackBar = ref({
 });
 
 const cadastrarFormaPagto = () => {
-  if (deFormaPagto.value === "") {
-    alert("Preencha o campo forma de pagamento!");
-    return;
-  }
-
   axios
     .post("http://localhost:8081/api/formapagto", {
       cdFormaPagto: cdFormaPagto.value,
@@ -121,7 +120,9 @@ const cadastrarFormaPagto = () => {
       fetchFormaPagto();
     })
     .catch((error) => {
-      console.error("Erro ao cadastrar forma de pagamento:", error);
+      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
     });
 };
 
@@ -150,7 +151,9 @@ const excluirFormaPagto = (cdFormaPagto: number) => {
       fetchFormaPagto();
     })
     .catch((error) => {
-      snackBar.value.msg = error.response.data.message;
+      const msgErro = error.response.data.message;
+
+      snackBar.value.msg = msgErro.substring(49, msgErro.length);
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
     });

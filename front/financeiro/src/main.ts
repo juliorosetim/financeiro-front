@@ -5,7 +5,6 @@
  */
 
 // Components
-import dotenv from "dotenv";
 import App from "./App.vue";
 import "@mdi/font/css/materialdesignicons.css";
 
@@ -23,6 +22,7 @@ const pinia = createPinia();
 
 // app.use(vuetify)
 app.use(Vuetify);
+app.use(pinia);
 
 registerPlugins(app);
 

@@ -1,14 +1,13 @@
 <template>
-  <div class="text-center ma-2">
-    <v-snackbar
-      rounded="pill"
-      :timeout="props.timeout"
-      v-model="props.show"
-      :color="props.color"
-    >
-      {{ props.msg.substring(49, props.msg.length) }}
-    </v-snackbar>
-  </div>
+  <v-snackbar
+    rounded="pill"
+    :timeout="props.timeout"
+    v-model="props.show"
+    :color="props.color"
+    onclick="props.show = false"
+  >
+    {{ props.msg.substring(49, props.msg.length) }}
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
@@ -29,8 +28,8 @@ const props = defineProps({
   },
   timeout: {
     require: false,
-    type: Number,
-    default: 2000,
+    type: String,
+    default: "2000",
   },
 });
 </script>

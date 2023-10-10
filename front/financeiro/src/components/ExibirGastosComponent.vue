@@ -32,9 +32,27 @@
     <h2>Totais</h2>
 
     <div class="wrapCard">
-      <div class="card">
+      <!-- <div class="card">
         <span>Periodo</span>
         <div v-for="gasto in gastosPorDatas" :key="index">
+          <label>
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
+      </div> -->
+
+      <div class="card">
+        <span>Receitas Totais</span>
+        <div v-for="gasto in totaisReceitas" :key="index">
+          <label>
+            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <span>Despesas Totais</span>
+        <div v-for="gasto in totaisDespesas" :key="index">
           <label>
             {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
           </label>
@@ -123,6 +141,8 @@ import { GastosPorFormaPgto } from "@/type/GastosPorFormaPgto";
 import { GastosPorCategoria } from "@/type/GastosPorCategoria";
 import { GastosPorGrupo } from "@/type/GastosPorGrupo";
 import { GastosPorDatas } from "@/type/GastosPorDatas";
+import { TotaisReceitas } from "@/type/TotaisReceitas";
+import { TotaisDespesas } from "@/type/TotaisDespesas";
 import Uteis from "@/service/Uteis";
 
 const dtFiltroInicio = ref("");
@@ -134,9 +154,13 @@ const gastosPorFormaPgto = ref<GastosPorFormaPgto[]>([]);
 const gastosPorCategoria = ref<GastosPorCategoria[]>([]);
 const gastosPorGrupo = ref<GastosPorGrupo[]>([]);
 const gastosPorDatas = ref<GastosPorDatas[]>([]);
+const totaisReceitas = ref<TotaisReceitas[]>([]);
+const totaisDespesas = ref<TotaisDespesas[]>([]);
 
 const fetchGastos = () => {
   fetchGastosPeriodo();
+  fetchTotaisReceitas();
+  fetchTotaisDespesas();
   fetchGastosPorCartoes();
   fetchGastosPorFormaPgto();
   fetchGastosPorCategoria();
@@ -152,6 +176,34 @@ const fetchGastosPeriodo = () => {
     .then((response) => {
       console.log(response.data);
       parcelasGastos.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos:", error);
+    });
+};
+
+const fetchTotaisDespesas = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-despesas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      totaisDespesas.value = response.data;
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar gastos:", error);
+    });
+};
+
+const fetchTotaisReceitas = () => {
+  axios
+    .get(
+      `http://localhost:8081/api/parcelas/totais-receitas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
+    )
+    .then((response) => {
+      console.log(response.data);
+      totaisReceitas.value = response.data;
     })
     .catch((error) => {
       console.error("Erro ao buscar gastos:", error);

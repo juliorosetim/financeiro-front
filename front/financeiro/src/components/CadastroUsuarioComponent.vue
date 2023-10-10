@@ -89,11 +89,14 @@
       </div>
     </v-card>
 
-    <SnackBarComponent
-      :msg="snackBar.msg"
-      :show="snackBar.show"
+    <v-snackbar
+      rounded="pill"
+      :timeout="2000"
+      v-model="snackBar.show"
       :color="snackBar.color"
-    />
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -102,13 +105,12 @@ import "@/assets/css/form-styles.css";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import Usuario from "@/type/usuarioType";
-import SnackBarComponent from "./SnackBarComponent.vue";
 
 const cdUsuario = ref<number | null>(null);
 const nome = ref(<string>"");
 const senha = ref("");
 const confirmacaoSenha = ref("");
-const ativo = ref("");
+const ativo = ref("S");
 
 const usuarios = ref<Usuario[]>([]);
 
@@ -145,7 +147,9 @@ const cadastrarUsuario = () => {
       fetchUsuarios();
     })
     .catch((error) => {
-      console.error("Erro ao cadastrar usuário:", error);
+      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
     });
 };
 
@@ -176,7 +180,9 @@ const excluirUsuario = (cdUsuario: number) => {
       fetchUsuarios();
     })
     .catch((error) => {
-      snackBar.value.msg = error.response.data.message;
+      const msgErro = error.response.data.message;
+
+      snackBar.value.msg = msgErro.substring(49, msgErro.length);
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
     });

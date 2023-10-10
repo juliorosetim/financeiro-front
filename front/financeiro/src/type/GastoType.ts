@@ -9,6 +9,7 @@ export type Gasto = {
   categoria: {
     cdCategoria: number;
     deCategoria: string;
+    metaMensal: number;
   };
   formaPagto: {
     cdFormaPagto: number;

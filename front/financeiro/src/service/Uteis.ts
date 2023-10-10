@@ -6,7 +6,9 @@ class Uteis {
   };
 
   formatarValorMonetario = (valor: number) => {
-    return valor.toLocaleString("pt-BR", {
+    const valorI = valor == null ? 0 : valor;
+
+    return valorI.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });

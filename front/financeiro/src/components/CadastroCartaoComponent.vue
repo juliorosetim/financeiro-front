@@ -94,11 +94,14 @@
       </div>
     </v-card>
 
-    <SnackBarComponent
-      :msg="snackBar.msg"
-      :show="snackBar.show"
+    <v-snackbar
+      rounded="pill"
+      :timeout="2000"
+      v-model="snackBar.show"
       :color="snackBar.color"
-    />
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -107,7 +110,6 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { Cartao } from "@/type/CartaoType";
 import "@/assets/css/form-styles.css";
-import SnackBarComponent from "./SnackBarComponent.vue";
 
 const cdCartao = ref<number | null>(null);
 const deCartao = ref("");
@@ -123,20 +125,20 @@ const snackBar = ref({
 const cartoes = ref<Cartao[]>([]);
 
 const cadastrarCartao = () => {
-  if (deCartao.value === "") {
-    alert("Preencha o campo Cartão");
-    return;
-  }
+  // if (deCartao.value === "") {
+  //   alert("Preencha o campo Cartão");
+  //   return;
+  // }
 
-  if (diaVirada.value === "") {
-    alert("Preencha o campo Dia virada do Cartão");
-    return;
-  }
+  // if (diaVirada.value === "") {
+  //   alert("Preencha o campo Dia virada do Cartão");
+  //   return;
+  // }
 
-  if (diaVencimento.value === "") {
-    alert("Preencha o campo Vencimento do Cartão");
-    return;
-  }
+  // if (diaVencimento.value === "") {
+  //   alert("Preencha o campo Vencimento do Cartão");
+  //   return;
+  // }
 
   axios
     .post("http://localhost:8081/api/cartao", {
@@ -155,7 +157,10 @@ const cadastrarCartao = () => {
       fetchCartoes();
     })
     .catch((error) => {
-      console.error("Erro ao cadastrar cartão:", error);
+      console.log(error.response);
+      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
     });
 };
 
@@ -185,7 +190,9 @@ const excluirCartao = (cdCartao: number) => {
       fetchCartoes();
     })
     .catch((error) => {
-      snackBar.value.msg = error.response.data.message;
+      const msgErro = error.response.data.message;
+
+      snackBar.value.msg = msgErro.substring(49, msgErro.length);
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
     });

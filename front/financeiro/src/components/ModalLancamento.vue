@@ -1,20 +1,15 @@
 <template>
-  <v-container>
+  <v-dialog v-model="props.showModal" max-width="1200px">
     <div class="form">
-      <button class="button-novo" @click="novoLancamento">
-        <v-icon>mdi-plus</v-icon>
-      </button>
-      <!-- <card>
+      <card>
         <div class="form-cadastro">
           <h2>Lançamento</h2>
-
-          <button class="button-custom" @click="novoLancamento">Novo</button>
 
           <div class="input-group">
             <v-select
               clearable
               outlined
-              v-model="tpLancamento"
+              v-model="storeGastos!.tpLancamento"
               :items="tiposLancamentos"
               item-value="tpLancamento"
               item-text="deGrupo"
@@ -28,7 +23,7 @@
 
           <div class="input-group">
             <input
-              v-model="deDescricao"
+              v-model="storeGastos!.deDescricao"
               id="deDescricao"
               type="text"
               name="text"
@@ -43,7 +38,7 @@
             <v-select
               clearable
               outlined
-              v-model="selectedGrupo"
+              v-model="storeGastos!.selectedGrupo"
               :items="grupos"
               item-value="cdGrupo"
               item-text="deGrupo"
@@ -59,7 +54,7 @@
           <div class="input-group">
             <v-select
               clearable
-              v-model="selectedCategoria"
+              v-model="storeGastos!.selectedCategoria"
               :items="categorias"
               item-value="cdCategoria"
               item-text="deCategoria"
@@ -77,7 +72,7 @@
               clearable
               outlined
               dense
-              v-model="selectedFormaPagto"
+              v-model="storeGastos!.selectedFormaPagto"
               :items="formasPagto"
               item-value="cdFormaPagto"
               item-text="deFormaPagto"
@@ -95,7 +90,7 @@
               clearable
               outlined
               dense
-              v-model="selectedCartao"
+              v-model="storeGastos!.selectedCartao"
               :items="cartoes"
               item-value="cdCartao"
               item-text="deCartao"
@@ -113,7 +108,7 @@
               class="input"
               type="number"
               id="vlrTotal"
-              v-model="vlrTotal"
+              v-model="storeGastos!.vlrTotal"
               required
               autocomplete="off"
             />
@@ -125,7 +120,7 @@
               class="input"
               type="number"
               id="qtdeParcela"
-              v-model="qtdeParcela"
+              v-model="storeGastos!.qtdeParcela"
               required
               autocomplete="off"
             />
@@ -138,7 +133,7 @@
               class="input"
               type="date"
               id="dtLancamento"
-              v-model="dtLancamento"
+              v-model="storeGastos!.dtLancamento"
               required
               autocomplete="off"
             />
@@ -150,7 +145,7 @@
               class="input"
               type="text"
               id="deFatura"
-              v-model="deFatura"
+              v-model="storeGastos!.deFatura"
               required
             />
             <label class="user-label">Observação</label>
@@ -160,7 +155,7 @@
               label="Pago"
               true-value="S"
               false-value="N"
-              v-model="pago"
+              v-model="storeGastos!.pago"
             />
           </div>
           <button
@@ -171,91 +166,27 @@
             Cadastrar
           </button>
           <button class="button-custom" @click="cancelar">Cancelar</button>
+          <button class="button-custom" @click="fecharModalLancamento">
+            Fechar
+          </button>
         </div>
-      </card> -->
-
-      <v-card style="padding-top: 30px">
-        <div class="grid-gastos">
-          <h2 style="padding-bottom: 10px">Lista de Lançamentos</h2>
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left" style="width: 35%">
-                    Descrição do Lançamento
-                  </th>
-                  <th class="text-left" style="width: 10%">Grupo</th>
-                  <th class="text-left" style="width: 10%">Categoria</th>
-                  <th class="text-left" style="width: 10%">Valor</th>
-                  <th class="text-left" style="width: 10%"></th>
-                  <th class="text-left" style="width: 10%"></th>
-                  <th class="text-left" style="width: 10%"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="gasto in gastos" :key="gasto.cdGasto">
-                  <td>{{ gasto.deDescricao }}</td>
-                  <td>{{ gasto.grupo.deGrupo }}</td>
-                  <td>{{ gasto.categoria.deCategoria }}</td>
-
-                  <div v-if="gasto.tpLancamento == 'Receita'">
-                    <td style="color: green">
-                      {{ formatarValorMonetario(gasto.vlrTotal) }}
-                    </td>
-                  </div>
-                  <div v-else="gasto.tpLancamento == 'Despesa'">
-                    <td style="color: red">
-                      {{ formatarValorMonetario(gasto.vlrTotal) }}
-                    </td>
-                  </div>
-
-                  <td>
-                    <span class="button-grid" @click="exibirParcelas(gasto)"
-                      ><v-icon>mdi-eye</v-icon></span
-                    >
-                  </td>
-                  <td>
-                    <span class="button-grid" @click="exibirGasto(gasto)"
-                      ><v-icon>mdi mdi-text-box-edit-outline</v-icon></span
-                    >
-                  </td>
-                  <td>
-                    <span
-                      class="button-grid"
-                      @click="
-                        gasto.cdGasto !== undefined
-                          ? excluirGasto(gasto.cdGasto)
-                          : null
-                      "
-                    >
-                      <v-icon>mdi-delete</v-icon>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </div>
-      </v-card>
-
-      <ModalParcelas
-        :parcelas="parcelasGasto"
-        :showModal="showModal"
-        @fecharModal="fecharModal"
-      />
-
-      <ModalLancamento
-        :showModal="showLancamentos"
-        :gasto="gastoSelected"
-        @fechar-modal-lancamento="fecharModalLancamento"
-      />
+      </card>
     </div>
-  </v-container>
+
+    <v-snackbar
+      rounded="pill"
+      :timeout="2000"
+      v-model="snackBar.show"
+      :color="snackBar.color"
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, PropType, onActivated } from "vue";
 import { Cartao } from "@/type/CartaoType";
 import { Grupo } from "@/type/GrupoType";
 import { FormaPagto } from "@/type/FormaPagtoType";
@@ -263,31 +194,30 @@ import "@/assets/css/form-styles.css";
 import { format } from "date-fns";
 import { Categoria } from "@/type/CategoriaType";
 import { Gasto } from "@/type/GastoType";
-import { ParcelasGastosDto } from "@/type/ParcelasGastosDto";
-import ModalParcelas from "./ModalParcelas.vue";
-import ModalLancamento from "./ModalLancamento.vue";
-import GastoService from "@/service/GastoService.ts";
-import gastoStore from "@/store/GastoStore.ts";
 import { storeToRefs } from "pinia";
+import gastoStore from "@/store/GastoStore";
+
+const props = defineProps({
+  showModal: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const snackBar = ref({
+  show: false,
+  msg: "",
+  color: "",
+});
+
+const emits = defineEmits(["fecharModalLancamento"]);
 
 const cartoes = ref<Cartao[]>([]);
 const grupos = ref<Grupo[]>([]);
 const formasPagto = ref<FormaPagto[]>([]);
 const categorias = ref<Categoria[]>([]);
-const gastos = ref<Gasto[]>([]);
-
-const gastoSelected = ref<Gasto | null>(null);
-
-const parcelasGasto = ref<ParcelasGastosDto[] | null>(null);
-
-const showModal = ref(false);
-
-const showLancamentos = ref(false);
 
 const storeGastos = gastoStore();
-
-const { getGastos, gastosStore } = storeGastos;
-
 const {
   cdGasto,
   deFatura,
@@ -296,7 +226,6 @@ const {
   vlrTotal,
   pago,
   tpLancamento,
-  dtLancamento,
   selectedCartao,
   selectedCategoria,
   selectedFormaPagto,
@@ -304,7 +233,29 @@ const {
   isEditing,
 } = storeToRefs(storeGastos);
 
-// const dtLancamento = ref(obterDataAtualFormatada());
+const { clearGasto, saveGasto } = storeGastos;
+
+const tiposLancamentos = ref(["Receita", "Despesa"]);
+
+function habilitaCartao(): boolean {
+  return selectedFormaPagto.value?.tipo == "Cartão";
+}
+
+function isReceita(): boolean {
+  return tpLancamento.value == "Receita";
+}
+
+const obterDataAtualFormatada = () => {
+  const dataAtual = new Date();
+
+  const mesAtual = dataAtual.getMonth();
+  const dataUmMesDepois = new Date();
+  dataUmMesDepois.setMonth(mesAtual + 1);
+
+  return format(dataUmMesDepois, "yyyy-MM-dd");
+};
+
+const dtLancamento = ref(obterDataAtualFormatada());
 
 const fetchCartoes = async () => {
   axios
@@ -350,99 +301,162 @@ const fetchCategoria = async () => {
     });
 };
 
-const fetchGastos = async () => {
-  await getGastos();
+// const cadastrarGasto = () => {
+//   axios
+//     .post("http://localhost:8081/api/gastos", {
+//       cdGasto: storeGastos.cdGasto,
+//       deFatura: storeGastos.deFatura,
+//       deDescricao: storeGastos.deDescricao,
+//       grupo: storeGastos.selectedGrupo,
+//       categoria: storeGastos.selectedCategoria,
+//       formaPagto: storeGastos.selectedFormaPagto,
+//       cartao: storeGastos.selectedCartao,
+//       qtdeParcela: storeGastos.qtdeParcela,
+//       vlrParcela: 0,
+//       vlrTotal: storeGastos.vlrTotal,
+//       dtLancamento: storeGastos.dtLancamento,
+//       pago: storeGastos.pago,
+//       tpLancamento: storeGastos.tpLancamento,
+//       usuario: {
+//         cdUsuario: 8,
+//       },
+//     })
+//     .then((response) => {
+//       console.log("Salvo com sucesso");
 
-  gastos.value = storeGastos.gastosStore;
+//       clearGasto();
+//     })
+//     .catch((error) => {
+//       console.log("Erro ao salvar o gasto");
+//     });
+// };
+
+const validacoes = (): boolean => {
+  if (storeGastos.tpLancamento == "") {
+    snackBar.value.msg = "Tipo de lançamento deve ser preenchido";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.deDescricao == "") {
+    snackBar.value.msg = "Descrição do lançamento deve ser preenchido";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.selectedGrupo == null) {
+    snackBar.value.msg = "Grupo deve ser preenchido";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.selectedCategoria == null) {
+    snackBar.value.msg = "Categoria deve ser preenchida";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.selectedFormaPagto == null) {
+    snackBar.value.msg = "Forma de pagamento deve ser preenchida";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.selectedFormaPagto?.tipo === "Cartão") {
+    if (storeGastos.selectedCartao == undefined) {
+      snackBar.value.msg = "Cartão deve ser preenchido";
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
+
+      return false;
+    }
+  }
+
+  if (storeGastos.vlrTotal == null) {
+    snackBar.value.msg = "Valor total deve ser preenchido";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  if (storeGastos.dtLancamento == undefined) {
+    snackBar.value.msg = "Data do lançamento deve ser preenchida";
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return false;
+  }
+
+  return true;
 };
 
-const fetchParcelas = async (cdGasto: number) => {
-  axios
-    .get(`http://localhost:8081/api/parcelas/parcelas-por-gasto/${cdGasto}`)
-    .then((response) => {
-      parcelasGasto.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de gastos", error);
-    });
+const cadastrarGasto = async () => {
+  if (!validacoes()) {
+    return;
+  }
+
+  const gastoSave = {
+    cdGasto: storeGastos.cdGasto,
+    deFatura: storeGastos.deFatura,
+    deDescricao: storeGastos.deDescricao,
+    grupo: storeGastos.selectedGrupo,
+    categoria: storeGastos.selectedCategoria,
+    formaPagto: storeGastos.selectedFormaPagto,
+    cartao: storeGastos.selectedCartao,
+    qtdeParcela: storeGastos.qtdeParcela,
+    vlrParcela: 0,
+    vlrTotal: storeGastos.vlrTotal,
+    dtLancamento: storeGastos.dtLancamento,
+    pago: storeGastos.pago,
+    tpLancamento: storeGastos.tpLancamento,
+    usuario: {
+      cdUsuario: 8,
+    },
+  };
+
+  const response = await storeGastos.saveGasto(gastoSave);
+
+  console.log("response.hasError", response);
+
+  if (response.hasError) {
+    const msgErro = response.error.message;
+
+    snackBar.value.msg = msgErro;
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+
+    return;
+  }
+  storeGastos.clearGasto();
 };
 
-const excluirGasto = (cdGasto: number) => {
-  axios
-    .delete(`http://localhost:8081/api/gastos/${cdGasto}`)
-    .then(() => {
-      console.log("Gasto excluído com sucesso!");
-      fetchGastos();
-    })
-    .catch((error) => {
-      console.error("Erro ao excluir gasto:", error);
-    });
-};
-
-const exibirGasto = (gasto: Gasto) => {
-  storeGastos.cdGasto = gasto.cdGasto;
-  storeGastos.deFatura = gasto.deFatura;
-  storeGastos.deDescricao = gasto.deDescricao;
-  storeGastos.selectedGrupo = { ...gasto.grupo };
-  storeGastos.selectedCategoria = { ...gasto.categoria };
-  storeGastos.selectedFormaPagto = { ...gasto.formaPagto };
-  storeGastos.selectedCartao = { ...gasto.cartao };
-  storeGastos.qtdeParcela = gasto.qtdeParcela;
-  storeGastos.vlrTotal = gasto.vlrTotal;
-  storeGastos.dtLancamento = gasto.dtLancamento;
-  storeGastos.pago = gasto.pago;
-  storeGastos.tpLancamento = gasto.tpLancamento;
-
-  storeGastos.isEditing = true;
-
-  storeGastos.gastoSelectedStore = gasto;
-
-  showLancamentos.value = true;
-};
-
-const dataFormatada = (dtVencimento: string) => {
-  return dtVencimento ? format(new Date(dtVencimento), "dd/MM/yyyy") : "";
-};
-
-const formatarValorMonetario = (valor: number) => {
-  return valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-};
+function cancelar() {
+  clearGasto();
+}
 
 onMounted(() => {
   fetchCartoes();
   fetchGrupos();
   fetchFormasPagto();
-  fetchGastos();
   fetchCategoria();
 
-  storeGastos.isEditing = false;
+  dtLancamento.value = obterDataAtualFormatada();
 });
 
-const exibirParcelas = (gasto: Gasto) => {
-  gastoSelected.value = gasto;
-
-  storeGastos.isEditing = true;
-
-  fetchParcelas(gastoSelected.value.cdGasto);
-
-  showModal.value = true;
-};
-
-const fecharModal = () => {
-  showModal.value = false;
-};
-
 const fecharModalLancamento = () => {
-  console.log("passou aqui 2");
-  showLancamentos.value = false;
-  fetchGastos();
-};
+  storeGastos.clearGasto();
 
-const novoLancamento = () => {
-  showLancamentos.value = true;
+  emits("fecharModalLancamento");
 };
 </script>
-@/store/GastoStore

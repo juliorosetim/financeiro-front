@@ -12,11 +12,16 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn variant="text" icon="mdi-magnify"></v-btn>
+        <!-- <v-btn variant="text" icon="mdi-magnify"></v-btn> -->
 
-        <v-btn variant="text" icon="mdi-filter"></v-btn>
+        <v-btn
+          class="button-custom"
+          @click="novoLancamento"
+          variant="text"
+          icon="mdi-plus"
+        ></v-btn>
 
-        <v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
+        <!-- <v-btn variant="text" icon="mdi-dots-vertical"></v-btn> -->
       </v-app-bar>
 
       <v-navigation-drawer v-model="drawer" location="top" temporary>
@@ -71,16 +76,36 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-main style="height: max-content">
+      <v-main>
         <router-view></router-view>
       </v-main>
     </v-layout>
   </v-card>
+
+  <ModalLancamento
+    :showModal="showLancamentos"
+    @fechar-modal-lancamento="fecharModalLancamento"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import "@/assets/css/form-styles.css";
+import ModalLancamento from "@/components/ModalLancamento.vue";
 
 const drawer = ref<Boolean>(false);
+
+const showLancamentos = ref(false);
+
+const fecharModalLancamento = () => {
+  showLancamentos.value = false;
+};
+
+const novoLancamento = () => {
+  // gastoSelected.value = gasto;
+
+  // fetchParcelas(gastoSelected.value.cdGasto);
+
+  showLancamentos.value = true;
+};
 </script>

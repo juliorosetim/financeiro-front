@@ -78,11 +78,14 @@
       </div>
     </v-card>
 
-    <SnackBarComponent
-      :msg="snackBar.msg"
-      :show="snackBar.show"
+    <v-snackbar
+      rounded="pill"
+      :timeout="snackBar.timeOut"
+      v-model="snackBar.show"
       :color="snackBar.color"
-    />
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -91,7 +94,6 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { Categoria } from "@/type/CategoriaType";
 import "@/assets/css/form-styles.css";
-import SnackBarComponent from "./SnackBarComponent.vue";
 import Constantes from "@/service/Constantes";
 import Uteis from "@/service/Uteis";
 
@@ -106,14 +108,10 @@ const snackBar = ref({
   show: false,
   msg: "",
   color: "",
+  timeOut: 2000,
 });
 
 const cadastrarCategoria = () => {
-  if (deCategoria.value === "") {
-    alert("Preencha o campo Categoria");
-    return;
-  }
-
   axios
     .post("http://localhost:8081/api/categoria", {
       cdCategoria: cdCategoria.value,
@@ -129,7 +127,9 @@ const cadastrarCategoria = () => {
       fetchCategorias();
     })
     .catch((error) => {
-      console.error("Erro ao cadastrar Categoria:", error);
+      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
     });
 };
 
@@ -143,6 +143,7 @@ const fetchCategorias = () => {
   axios
     .get("http://localhost:8081/api/categoria")
     .then((response) => {
+      console.log("response.data", response.data);
       categorias.value = response.data;
     })
     .catch((error) => {
@@ -158,10 +159,12 @@ const excluirCategoria = (cdCategoria: number) => {
       fetchCategorias();
     })
     .catch((error) => {
-      console.log(error);
-      snackBar.value.msg = error.response.data.message;
+      const msgErro = error.response.data.message;
+
+      snackBar.value.msg = msgErro.substring(49, msgErro.length);
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
+      snackBar.value.timeOut = 2000;
     });
 };
 

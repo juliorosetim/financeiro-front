@@ -63,11 +63,15 @@
         </v-simple-table>
       </div>
     </v-card>
-    <SnackBarComponent
-      :msg="snackBar.msg"
-      :show="snackBar.show"
+
+    <v-snackbar
+      rounded="pill"
+      :timeout="2000"
+      v-model="snackBar.show"
       :color="snackBar.color"
-    />
+    >
+      {{ snackBar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -76,7 +80,6 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { Grupo } from "@/type/GrupoType";
 import "@/assets/css/form-styles.css";
-import SnackBarComponent from "./SnackBarComponent.vue";
 
 const deGrupo = ref("");
 const cdGrupo = ref<number | null>(null);
@@ -90,11 +93,6 @@ const snackBar = ref({
 });
 
 const cadastrarGrupo = () => {
-  if (deGrupo.value === "") {
-    alert("Preencha o campo grupo");
-    return;
-  }
-
   axios
     .post("http://localhost:8081/api/grupo", {
       cdGrupo: cdGrupo.value,
@@ -108,7 +106,9 @@ const cadastrarGrupo = () => {
       fetchGrupos();
     })
     .catch((error) => {
-      console.error("Erro ao cadastrar grupo:", error);
+      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+      snackBar.value.show = true;
+      snackBar.value.color = "#d11e48";
     });
 };
 
@@ -136,7 +136,9 @@ const excluirGrupo = (cdGrupo: number) => {
       fetchGrupos();
     })
     .catch((error) => {
-      snackBar.value.msg = error.response.data.message;
+      const msgErro = error.response.data.message;
+
+      snackBar.value.msg = msgErro.substring(49, msgErro.length);
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
     });
