@@ -5,12 +5,13 @@ import Usuario from "@/type/usuarioType";
 
 export const CadastroUsuarioStore = defineStore("cadastroUsuarioStore", () => {
   const cdUsuario = ref<number | null>(null);
-  const nome = ref(<string>"");
+  const nome = ref("");
   const senha = ref("");
   const confirmacaoSenha = ref("");
   const ativo = ref("S");
 
   const usuarios = ref<Usuario[]>([]);
+  const usuario = ref<Usuario>();
 
   const getUsuarios = async () => {
     const response = await CadastroUsuarioService.getUsuarios();
@@ -49,6 +50,7 @@ export const CadastroUsuarioStore = defineStore("cadastroUsuarioStore", () => {
     confirmacaoSenha,
     ativo,
     usuarios,
+    usuario,
     saveUsuario,
     getUsuarios,
     deleteUsuario,

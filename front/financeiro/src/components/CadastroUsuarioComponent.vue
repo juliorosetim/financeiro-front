@@ -115,7 +115,7 @@ const storeUsuario = CadastroUsuarioStore();
 
 const { getUsuarios, saveUsuario, deleteUsuario } = storeUsuario;
 
-const { cdUsuario, nome, senha, confirmacaoSenha, ativo } =
+const { cdUsuario, nome, senha, confirmacaoSenha, ativo, usuario } =
   storeToRefs(storeUsuario);
 
 const snackBar = ref({
@@ -132,28 +132,36 @@ const cancelar = () => {
   cdUsuario.value = null;
 };
 
-const cadastrarUsuario = () => {
-  axios
-    .post("http://localhost:8081/api/usuario", {
-      cdUsuario: cdUsuario.value,
-      deUsuario: nome.value,
-      senha: senha.value,
-      flAtivo: ativo.value,
-    })
-    .then((response) => {
-      nome.value = "";
-      senha.value = "";
-      confirmacaoSenha.value = "";
-      ativo.value = "S";
-      cdUsuario.value = null;
+const cadastrarUsuario = async () => {
+  const usuarioSave = {
+    cdUsuario: cdUsuario.value,
+    deUsuario: nome.value,
+    senha: senha.value,
+    flAtivo: ativo.value,
+  };
 
-      fetchUsuarios();
-    })
-    .catch((error) => {
-      snackBar.value.msg = error.response.data.errors[0].defaultMessage;
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  const response = await storeUsuario.saveUsuario(usuarioSave);
+  // axios
+  //   .post("http://localhost:8081/api/usuario", {
+  //     cdUsuario: cdUsuario.value,
+  //     deUsuario: nome.value,
+  //     senha: senha.value,
+  //     flAtivo: ativo.value,
+  //   })
+  //   .then((response) => {
+  //     nome.value = "";
+  //     senha.value = "";
+  //     confirmacaoSenha.value = "";
+  //     ativo.value = "S";
+  //     cdUsuario.value = null;
+
+  //     fetchUsuarios();
+  //   })
+  //   .catch((error) => {
+  //     snackBar.value.msg = error.response.data.errors[0].defaultMessage;
+  //     snackBar.value.show = true;
+  //     snackBar.value.color = "#d11e48";
+  //   });
 };
 
 const exibirUsuario = (usuario: Usuario) => {
@@ -170,8 +178,6 @@ const fetchUsuarios = async () => {
 
 const excluirUsuario = async (cdUsuario: number) => {
   const response = await deleteUsuario(cdUsuario);
-
-  console.log(response);
 
   if (response!.hasError) {
     const msgErro = response!.error!.message;
