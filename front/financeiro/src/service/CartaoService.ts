@@ -8,7 +8,6 @@ class CartaoService {
 
     try {
       const data = await axios.get("http://localhost:8081/api/cartao");
-      console.log(`data ${data}`);
       response.content = data.data;
     } catch (e) {
       response.error = this.remoteError(e);

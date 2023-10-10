@@ -119,7 +119,6 @@ const cadastrarCategoria = () => {
       metaMensal: metaMensal.value,
     })
     .then((response) => {
-      console.log("Categoria cadastrada com sucesso!", response.data);
       deCategoria.value = "";
       cdCategoria.value = null;
       metaMensal.value = null;
@@ -143,7 +142,6 @@ const fetchCategorias = () => {
   axios
     .get("http://localhost:8081/api/categoria")
     .then((response) => {
-      console.log("response.data", response.data);
       categorias.value = response.data;
     })
     .catch((error) => {
@@ -155,7 +153,6 @@ const excluirCategoria = (cdCategoria: number) => {
   axios
     .delete(`http://localhost:8081/api/categoria/${cdCategoria}`)
     .then(() => {
-      console.log("Categoria excluída com sucesso!");
       fetchCategorias();
     })
     .catch((error) => {
@@ -176,6 +173,5 @@ const exibirCategoria = (categoria: Categoria) => {
 
 onMounted(() => {
   fetchCategorias();
-  console.log(Constantes.URL_API);
 });
 </script>

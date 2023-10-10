@@ -19,6 +19,7 @@
           @click="novoLancamento"
           variant="text"
           icon="mdi-plus"
+          color="white"
         ></v-btn>
 
         <!-- <v-btn variant="text" icon="mdi-dots-vertical"></v-btn> -->
@@ -102,10 +103,6 @@ const fecharModalLancamento = () => {
 };
 
 const novoLancamento = () => {
-  // gastoSelected.value = gasto;
-
-  // fetchParcelas(gastoSelected.value.cdGasto);
-
   showLancamentos.value = true;
 };
 </script>

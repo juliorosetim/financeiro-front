@@ -137,7 +137,6 @@ const cadastrarUsuario = () => {
       flAtivo: ativo.value,
     })
     .then((response) => {
-      console.log("Usuário cadastrado com sucesso!", response.data);
       nome.value = "";
       senha.value = "";
       confirmacaoSenha.value = "";
@@ -176,7 +175,6 @@ const excluirUsuario = (cdUsuario: number) => {
   axios
     .delete(`http://localhost:8081/api/usuario/${cdUsuario}`)
     .then(() => {
-      console.log("Usuário excluído com sucesso!");
       fetchUsuarios();
     })
     .catch((error) => {

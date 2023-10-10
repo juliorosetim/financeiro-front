@@ -9,7 +9,7 @@
             <v-select
               clearable
               outlined
-              v-model="storeGastos!.tpLancamento"
+              v-model="storeGastos.tpLancamento"
               :items="tiposLancamentos"
               item-value="tpLancamento"
               item-text="deGrupo"
@@ -230,7 +230,6 @@ const {
   selectedCategoria,
   selectedFormaPagto,
   selectedGrupo,
-  isEditing,
 } = storeToRefs(storeGastos);
 
 const { clearGasto, saveGasto } = storeGastos;
@@ -300,36 +299,6 @@ const fetchCategoria = async () => {
       console.error("Erro ao buscar a lista de categorias", error);
     });
 };
-
-// const cadastrarGasto = () => {
-//   axios
-//     .post("http://localhost:8081/api/gastos", {
-//       cdGasto: storeGastos.cdGasto,
-//       deFatura: storeGastos.deFatura,
-//       deDescricao: storeGastos.deDescricao,
-//       grupo: storeGastos.selectedGrupo,
-//       categoria: storeGastos.selectedCategoria,
-//       formaPagto: storeGastos.selectedFormaPagto,
-//       cartao: storeGastos.selectedCartao,
-//       qtdeParcela: storeGastos.qtdeParcela,
-//       vlrParcela: 0,
-//       vlrTotal: storeGastos.vlrTotal,
-//       dtLancamento: storeGastos.dtLancamento,
-//       pago: storeGastos.pago,
-//       tpLancamento: storeGastos.tpLancamento,
-//       usuario: {
-//         cdUsuario: 8,
-//       },
-//     })
-//     .then((response) => {
-//       console.log("Salvo com sucesso");
-
-//       clearGasto();
-//     })
-//     .catch((error) => {
-//       console.log("Erro ao salvar o gasto");
-//     });
-// };
 
 const validacoes = (): boolean => {
   if (storeGastos.tpLancamento == "") {
@@ -414,7 +383,7 @@ const cadastrarGasto = async () => {
     categoria: storeGastos.selectedCategoria,
     formaPagto: storeGastos.selectedFormaPagto,
     cartao: storeGastos.selectedCartao,
-    qtdeParcela: storeGastos.qtdeParcela,
+    qtdeParcela: storeGastos.qtdeParcela != null ? storeGastos.qtdeParcela : 1,
     vlrParcela: 0,
     vlrTotal: storeGastos.vlrTotal,
     dtLancamento: storeGastos.dtLancamento,
@@ -427,17 +396,15 @@ const cadastrarGasto = async () => {
 
   const response = await storeGastos.saveGasto(gastoSave);
 
-  console.log("response.hasError", response);
+  // if (response.hasError) {
+  //   const msgErro = response.error.message;
 
-  if (response.hasError) {
-    const msgErro = response.error.message;
+  //   snackBar.value.msg = msgErro;
+  //   snackBar.value.show = true;
+  //   snackBar.value.color = "#d11e48";
 
-    snackBar.value.msg = msgErro;
-    snackBar.value.show = true;
-    snackBar.value.color = "#d11e48";
-
-    return;
-  }
+  //   return;
+  // }
   storeGastos.clearGasto();
 };
 

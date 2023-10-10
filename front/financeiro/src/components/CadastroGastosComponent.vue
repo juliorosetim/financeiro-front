@@ -266,8 +266,8 @@ import { Gasto } from "@/type/GastoType";
 import { ParcelasGastosDto } from "@/type/ParcelasGastosDto";
 import ModalParcelas from "./ModalParcelas.vue";
 import ModalLancamento from "./ModalLancamento.vue";
-import GastoService from "@/service/GastoService.ts";
-import gastoStore from "@/store/GastoStore.ts";
+// import GastoService from "@/service/GastoService.ts";
+import gastoStore from "@/store/GastoStore";
 import { storeToRefs } from "pinia";
 
 const cartoes = ref<Cartao[]>([]);
@@ -301,54 +301,7 @@ const {
   selectedCategoria,
   selectedFormaPagto,
   selectedGrupo,
-  isEditing,
 } = storeToRefs(storeGastos);
-
-// const dtLancamento = ref(obterDataAtualFormatada());
-
-const fetchCartoes = async () => {
-  axios
-    .get("http://localhost:8081/api/cartao")
-    .then((response) => {
-      cartoes.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de cartões:", error);
-    });
-};
-
-const fetchGrupos = async () => {
-  axios
-    .get("http://localhost:8081/api/grupo")
-    .then((response) => {
-      grupos.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de grupos:", error);
-    });
-};
-
-const fetchFormasPagto = async () => {
-  axios
-    .get("http://localhost:8081/api/formapagto")
-    .then((response) => {
-      formasPagto.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de Formas de pagamentos:", error);
-    });
-};
-
-const fetchCategoria = async () => {
-  axios
-    .get("http://localhost:8081/api/categoria")
-    .then((response) => {
-      categorias.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de categorias", error);
-    });
-};
 
 const fetchGastos = async () => {
   await getGastos();
@@ -371,7 +324,6 @@ const excluirGasto = (cdGasto: number) => {
   axios
     .delete(`http://localhost:8081/api/gastos/${cdGasto}`)
     .then(() => {
-      console.log("Gasto excluído com sucesso!");
       fetchGastos();
     })
     .catch((error) => {
@@ -393,15 +345,9 @@ const exibirGasto = (gasto: Gasto) => {
   storeGastos.pago = gasto.pago;
   storeGastos.tpLancamento = gasto.tpLancamento;
 
-  storeGastos.isEditing = true;
-
   storeGastos.gastoSelectedStore = gasto;
 
   showLancamentos.value = true;
-};
-
-const dataFormatada = (dtVencimento: string) => {
-  return dtVencimento ? format(new Date(dtVencimento), "dd/MM/yyyy") : "";
 };
 
 const formatarValorMonetario = (valor: number) => {
@@ -412,19 +358,11 @@ const formatarValorMonetario = (valor: number) => {
 };
 
 onMounted(() => {
-  fetchCartoes();
-  fetchGrupos();
-  fetchFormasPagto();
   fetchGastos();
-  fetchCategoria();
-
-  storeGastos.isEditing = false;
 });
 
 const exibirParcelas = (gasto: Gasto) => {
   gastoSelected.value = gasto;
-
-  storeGastos.isEditing = true;
 
   fetchParcelas(gastoSelected.value.cdGasto);
 
@@ -436,7 +374,6 @@ const fecharModal = () => {
 };
 
 const fecharModalLancamento = () => {
-  console.log("passou aqui 2");
   showLancamentos.value = false;
   fetchGastos();
 };
@@ -445,4 +382,3 @@ const novoLancamento = () => {
   showLancamentos.value = true;
 };
 </script>
-@/store/GastoStore

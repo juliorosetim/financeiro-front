@@ -99,7 +99,6 @@ const cadastrarGrupo = () => {
       deGrupo: deGrupo.value,
     })
     .then((response) => {
-      console.log("Grupo cadastrado com sucesso!", response.data);
       deGrupo.value = "";
       cdGrupo.value = null;
 
@@ -132,7 +131,6 @@ const excluirGrupo = (cdGrupo: number) => {
   axios
     .delete(`http://localhost:8081/api/grupo/${cdGrupo}`)
     .then(() => {
-      console.log("Grupo excluído com sucesso!");
       fetchGrupos();
     })
     .catch((error) => {

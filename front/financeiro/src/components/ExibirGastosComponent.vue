@@ -32,15 +32,6 @@
     <h2>Totais</h2>
 
     <div class="wrapCard">
-      <!-- <div class="card">
-        <span>Periodo</span>
-        <div v-for="gasto in gastosPorDatas" :key="index">
-          <label>
-            {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
-          </label>
-        </div>
-      </div> -->
-
       <div class="card">
         <span>Receitas Totais</span>
         <div v-for="gasto in totaisReceitas" :key="index">
@@ -51,7 +42,7 @@
       </div>
 
       <div class="card">
-        <span>Despesas Totais</span>
+        <span style="color: red">Despesas Totais</span>
         <div v-for="gasto in totaisDespesas" :key="index">
           <label>
             {{ Uteis.formatarValorMonetario(gasto.vlrTotal) }}
@@ -174,7 +165,6 @@ const fetchGastosPeriodo = () => {
       `http://localhost:8081/api/parcelas/parcelas-por-datas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       parcelasGastos.value = response.data;
     })
     .catch((error) => {
@@ -188,7 +178,6 @@ const fetchTotaisDespesas = () => {
       `http://localhost:8081/api/parcelas/totais-despesas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       totaisDespesas.value = response.data;
     })
     .catch((error) => {
@@ -202,7 +191,6 @@ const fetchTotaisReceitas = () => {
       `http://localhost:8081/api/parcelas/totais-receitas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       totaisReceitas.value = response.data;
     })
     .catch((error) => {
@@ -216,7 +204,6 @@ const fetchGastosPorCartoes = () => {
       `http://localhost:8081/api/parcelas/totais-por-cartoes/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       gastosPorCartao.value = response.data;
     })
     .catch((error) => {
@@ -230,7 +217,6 @@ const fetchGastosPorFormaPgto = () => {
       `http://localhost:8081/api/parcelas/totais-por-forma-pgto/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       gastosPorFormaPgto.value = response.data;
     })
     .catch((error) => {
@@ -244,7 +230,6 @@ const fetchGastosPorCategoria = () => {
       `http://localhost:8081/api/parcelas/totais-por-categorias/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       gastosPorCategoria.value = response.data;
     })
     .catch((error) => {
@@ -258,7 +243,6 @@ const fetchGastosPorGrupo = () => {
       `http://localhost:8081/api/parcelas/totais-por-grupo/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       gastosPorGrupo.value = response.data;
     })
     .catch((error) => {
@@ -272,7 +256,6 @@ const fetchGastosPorDatas = () => {
       `http://localhost:8081/api/parcelas/totais-por-datas/${dtFiltroInicio.value}/${dtFiltroFim.value}`,
     )
     .then((response) => {
-      console.log(response.data);
       gastosPorDatas.value = response.data;
     })
     .catch((error) => {

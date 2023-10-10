@@ -112,7 +112,6 @@ const cadastrarFormaPagto = () => {
       tipo: tipo.value,
     })
     .then((response) => {
-      console.log("Forma pagto cadastrado com sucesso!", response.data);
       deFormaPagto.value = "";
       cdFormaPagto.value = null;
       tipo.value = "";
@@ -147,7 +146,6 @@ const excluirFormaPagto = (cdFormaPagto: number) => {
   axios
     .delete(`http://localhost:8081/api/formapagto/${cdFormaPagto}`)
     .then(() => {
-      console.log("Forma de pagamento excluída com sucesso!");
       fetchFormaPagto();
     })
     .catch((error) => {

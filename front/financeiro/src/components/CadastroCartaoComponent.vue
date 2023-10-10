@@ -148,7 +148,6 @@ const cadastrarCartao = () => {
       diaVencimento: diaVencimento.value,
     })
     .then((response) => {
-      console.log("Cartão cadastrado com sucesso!", response.data);
       deCartao.value = "";
       diaVirada.value = "";
       diaVencimento.value = "";
@@ -157,7 +156,6 @@ const cadastrarCartao = () => {
       fetchCartoes();
     })
     .catch((error) => {
-      console.log(error.response);
       snackBar.value.msg = error.response.data.errors[0].defaultMessage;
       snackBar.value.show = true;
       snackBar.value.color = "#d11e48";
@@ -186,7 +184,6 @@ const excluirCartao = (cdCartao: number) => {
   axios
     .delete(`http://localhost:8081/api/cartao/${cdCartao}`)
     .then(() => {
-      console.log("Cartão excluído com sucesso!");
       fetchCartoes();
     })
     .catch((error) => {

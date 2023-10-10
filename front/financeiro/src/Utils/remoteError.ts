@@ -4,7 +4,6 @@ export const remoteError = (error: any): RemoteError => {
   let message = "Erro interno do servidor";
   let code = 500;
 
-  console.log("error.response", error.response);
   // if (error.response.data && error.response.data.message) {
   //   message = error.response.data.message;
   //   code = error.response.data.status;

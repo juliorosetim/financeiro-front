@@ -18,7 +18,6 @@ export const gastoStore = defineStore("gastoStore", () => {
   const vlrTotal = ref<number | null>(null);
   const pago = ref("");
   const tpLancamento = ref("");
-  const isEditing = ref(false);
 
   const selectedCartao = ref<Cartao | null>(null);
   const selectedGrupo = ref<Grupo | null>(null);
@@ -71,7 +70,6 @@ export const gastoStore = defineStore("gastoStore", () => {
     selectedGrupo.value = null;
     selectedFormaPagto.value = null;
     selectedCategoria.value = null;
-    isEditing.value = false;
   };
 
   return {
@@ -89,7 +87,6 @@ export const gastoStore = defineStore("gastoStore", () => {
     selectedGrupo,
     selectedFormaPagto,
     selectedCategoria,
-    isEditing,
     getGastos,
     clearGasto,
     saveGasto,
