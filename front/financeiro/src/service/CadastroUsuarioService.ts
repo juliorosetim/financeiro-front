@@ -1,26 +1,23 @@
 import Usuario from "@/type/usuarioType";
+import { handleApiResponse } from "@/Utils/request";
 import axios from "axios";
 import { RemoteError, Response } from "./Rest";
 
 class CadastroUsuarioService {
-  public async findAllUsuarios(): Promise<Response<Usuario>> {
-    const response = new Response<Usuario>();
+  public async getUsuarios(): Promise<Response<Usuario[]>> {
+    const url = "http://localhost:8081/api/usuario";
 
-    try {
-      const { data } = await axios.get("http://localhost:8081/api/usuario");
-      response.content = data;
-    } catch (e) {
-      response.error = this.remoteError(e);
-    }
-
-    return response;
+    return handleApiResponse(() => axios.get(url));
   }
 
-  private remoteError(error: any): RemoteError {
-    return {
-      message: error.response.data.message,
-      code: error.response.data.status,
-    } as RemoteError;
+  public async saveUsuario(usuario: Usuario): Promise<Response<Usuario>> {
+    const url = "http://localhost:8081/api/usuario";
+    return handleApiResponse(() => axios.post(url, usuario));
+  }
+
+  public async deleteUsuario(cdUsuario: number): Promise<Response<Usuario>> {
+    const url = `http://localhost:8081/api/usuario/${cdUsuario}`;
+    return handleApiResponse(() => axios.delete(url));
   }
 }
 

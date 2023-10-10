@@ -61,7 +61,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="usuario in usuarios" :key="usuario.cdUsuario">
+              <tr
+                v-for="usuario in storeUsuario.usuarios"
+                :key="usuario.cdUsuario"
+              >
                 <td>{{ usuario.deUsuario }}</td>
                 <td></td>
                 <td>{{ usuario.flAtivo }}</td>
@@ -105,14 +108,15 @@ import "@/assets/css/form-styles.css";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import Usuario from "@/type/usuarioType";
+import CadastroUsuarioStore from "@/store/cadastroUsuarioStore";
+import { storeToRefs } from "pinia";
 
-const cdUsuario = ref<number | null>(null);
-const nome = ref(<string>"");
-const senha = ref("");
-const confirmacaoSenha = ref("");
-const ativo = ref("S");
+const storeUsuario = CadastroUsuarioStore();
 
-const usuarios = ref<Usuario[]>([]);
+const { getUsuarios, saveUsuario, deleteUsuario } = storeUsuario;
+
+const { cdUsuario, nome, senha, confirmacaoSenha, ativo } =
+  storeToRefs(storeUsuario);
 
 const snackBar = ref({
   show: false,
@@ -160,30 +164,22 @@ const exibirUsuario = (usuario: Usuario) => {
   ativo.value = usuario.flAtivo;
 };
 
-const fetchUsuarios = () => {
-  axios
-    .get("http://localhost:8081/api/usuario")
-    .then((response) => {
-      usuarios.value = response.data;
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar a lista de usuários:", error);
-    });
+const fetchUsuarios = async () => {
+  await getUsuarios();
 };
 
-const excluirUsuario = (cdUsuario: number) => {
-  axios
-    .delete(`http://localhost:8081/api/usuario/${cdUsuario}`)
-    .then(() => {
-      fetchUsuarios();
-    })
-    .catch((error) => {
-      const msgErro = error.response.data.message;
+const excluirUsuario = async (cdUsuario: number) => {
+  const response = await deleteUsuario(cdUsuario);
 
-      snackBar.value.msg = msgErro.substring(49, msgErro.length);
-      snackBar.value.show = true;
-      snackBar.value.color = "#d11e48";
-    });
+  console.log(response);
+
+  if (response!.hasError) {
+    const msgErro = response!.error!.message;
+
+    snackBar.value.msg = msgErro.substring(49, msgErro.length);
+    snackBar.value.show = true;
+    snackBar.value.color = "#d11e48";
+  }
 };
 
 onMounted(() => {
