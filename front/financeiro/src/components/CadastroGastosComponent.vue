@@ -4,176 +4,6 @@
       <button class="button-novo" @click="novoLancamento">
         <v-icon>mdi-plus</v-icon>
       </button>
-      <!-- <card>
-        <div class="form-cadastro">
-          <h2>Lançamento</h2>
-
-          <button class="button-custom" @click="novoLancamento">Novo</button>
-
-          <div class="input-group">
-            <v-select
-              clearable
-              outlined
-              v-model="tpLancamento"
-              :items="tiposLancamentos"
-              item-value="tpLancamento"
-              item-text="deGrupo"
-              item-title="deGrupo"
-              label="Tipo de Lançamento"
-              density="compact"
-              hide-details="true"
-              variant="outlined"
-            />
-          </div>
-
-          <div class="input-group">
-            <input
-              v-model="deDescricao"
-              id="deDescricao"
-              type="text"
-              name="text"
-              required
-              autocomplete="off"
-              class="input"
-            />
-            <label class="user-label">Descrição do Lançamento</label>
-          </div>
-
-          <div class="input-group">
-            <v-select
-              clearable
-              outlined
-              v-model="selectedGrupo"
-              :items="grupos"
-              item-value="cdGrupo"
-              item-text="deGrupo"
-              item-title="deGrupo"
-              label="Grupo"
-              density="compact"
-              hide-details="true"
-              return-object
-              variant="outlined"
-            />
-          </div>
-
-          <div class="input-group">
-            <v-select
-              clearable
-              v-model="selectedCategoria"
-              :items="categorias"
-              item-value="cdCategoria"
-              item-text="deCategoria"
-              item-title="deCategoria"
-              label="Categoria"
-              density="compact"
-              hide-details="true"
-              return-object
-              variant="outlined"
-            />
-          </div>
-
-          <div class="input-group">
-            <v-select
-              clearable
-              outlined
-              dense
-              v-model="selectedFormaPagto"
-              :items="formasPagto"
-              item-value="cdFormaPagto"
-              item-text="deFormaPagto"
-              item-title="deFormaPagto"
-              label="Forma Pagamento"
-              density="compact"
-              hide-details="true"
-              return-object
-              variant="outlined"
-            />
-          </div>
-
-          <div v-show="habilitaCartao()" class="input-group">
-            <v-select
-              clearable
-              outlined
-              dense
-              v-model="selectedCartao"
-              :items="cartoes"
-              item-value="cdCartao"
-              item-text="deCartao"
-              item-title="deCartao"
-              label="Cartão"
-              density="compact"
-              hide-details="true"
-              return-object
-              variant="outlined"
-            />
-          </div>
-
-          <div class="input-group">
-            <input
-              class="input"
-              type="number"
-              id="vlrTotal"
-              v-model="vlrTotal"
-              required
-              autocomplete="off"
-            />
-            <label class="user-label">Valor total</label>
-          </div>
-
-          <div v-show="!isReceita()" class="input-group">
-            <input
-              class="input"
-              type="number"
-              id="qtdeParcela"
-              v-model="qtdeParcela"
-              required
-              autocomplete="off"
-            />
-            <label class="user-label">Quantidade de parcelas</label>
-          </div>
-
-          <div class="input-group">
-            <v-label for="dtLancamento"></v-label>
-            <input
-              class="input"
-              type="date"
-              id="dtLancamento"
-              v-model="dtLancamento"
-              required
-              autocomplete="off"
-            />
-            <label class="user-label">Data de lançamento</label>
-          </div>
-
-          <div class="input-group">
-            <input
-              class="input"
-              type="text"
-              id="deFatura"
-              v-model="deFatura"
-              required
-            />
-            <label class="user-label">Observação</label>
-          </div>
-          <div>
-            <v-checkbox-btn
-              label="Pago"
-              true-value="S"
-              false-value="N"
-              v-model="pago"
-            />
-          </div>
-          <button
-            class="button-custom"
-            @click="cadastrarGasto"
-            style="margin-right: 10px"
-          >
-            Cadastrar
-          </button>
-          <button class="button-custom" @click="cancelar">Cancelar</button>
-        </div>
-      </card> -->
-
       <v-card style="padding-top: 30px">
         <div class="grid-gastos">
           <h2 style="padding-bottom: 10px">Lista de Lançamentos</h2>
@@ -266,9 +96,10 @@ import { Gasto } from "@/type/GastoType";
 import { ParcelasGastosDto } from "@/type/ParcelasGastosDto";
 import ModalParcelas from "./ModalParcelas.vue";
 import ModalLancamento from "./ModalLancamento.vue";
-// import GastoService from "@/service/GastoService.ts";
 import gastoStore from "@/store/GastoStore";
 import { storeToRefs } from "pinia";
+import Uteis from "@/service/Uteis";
+import moment from "moment";
 
 const cartoes = ref<Cartao[]>([]);
 const grupos = ref<Grupo[]>([]);
@@ -379,6 +210,7 @@ const fecharModalLancamento = () => {
 };
 
 const novoLancamento = () => {
+  storeGastos.dtLancamento = moment(new Date()).format("yyyy-MM-DD");
   showLancamentos.value = true;
 };
 </script>

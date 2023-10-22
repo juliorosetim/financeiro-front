@@ -1,8 +1,9 @@
-import { format } from "date-fns";
+import moment from "moment";
 
 class Uteis {
   dataFormatada = (dtVencimento: string) => {
-    return dtVencimento ? format(new Date(dtVencimento), "dd/MM/yyyy") : "";
+    console.log('3');
+    return dtVencimento ? moment(dtVencimento).format("DD/MM/yyyy"): moment(new Date() ).format("DD/MM/yyyy");
   };
 
   formatarValorMonetario = (valor: number) => {

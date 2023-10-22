@@ -196,6 +196,7 @@ import { Categoria } from "@/type/CategoriaType";
 import { Gasto } from "@/type/GastoType";
 import { storeToRefs } from "pinia";
 import gastoStore from "@/store/GastoStore";
+import Uteis from "@/service/Uteis";
 
 const props = defineProps({
   showModal: {
@@ -230,6 +231,7 @@ const {
   selectedCategoria,
   selectedFormaPagto,
   selectedGrupo,
+  dtLancamento
 } = storeToRefs(storeGastos);
 
 const { clearGasto, saveGasto } = storeGastos;
@@ -244,17 +246,17 @@ function isReceita(): boolean {
   return tpLancamento.value == "Receita";
 }
 
-const obterDataAtualFormatada = () => {
-  const dataAtual = new Date();
+// const obterDataAtualFormatada = () => {
+//   const dataAtual = new Date();
 
-  const mesAtual = dataAtual.getMonth();
-  const dataUmMesDepois = new Date();
-  dataUmMesDepois.setMonth(mesAtual + 1);
+//   const mesAtual = dataAtual.getMonth();
+//   const dataUmMesDepois = new Date();
+//   dataUmMesDepois.setMonth(mesAtual + 1);
 
-  return format(dataUmMesDepois, "yyyy-MM-dd");
-};
+//   return format(dataUmMesDepois, "yyyy-MM-dd");
+// };
 
-const dtLancamento = ref(obterDataAtualFormatada());
+// const dtLancamento = ref(Uteis.dataFormatada());
 
 const fetchCartoes = async () => {
   axios
@@ -418,7 +420,7 @@ onMounted(() => {
   fetchFormasPagto();
   fetchCategoria();
 
-  dtLancamento.value = obterDataAtualFormatada();
+  //dtLancamento.value = obterDataAtualFormatada();
 });
 
 const fecharModalLancamento = () => {

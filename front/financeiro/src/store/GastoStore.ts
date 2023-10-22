@@ -7,6 +7,7 @@ import { Cartao } from "@/type/CartaoType";
 import { Grupo } from "@/type/GrupoType";
 import { FormaPagto } from "@/type/FormaPagtoType";
 import { Categoria } from "@/type/CategoriaType";
+import moment from "moment";
 
 export const gastoStore = defineStore("gastoStore", () => {
   const gastoSelectedStore = ref<Gasto | null>(null);
@@ -25,16 +26,12 @@ export const gastoStore = defineStore("gastoStore", () => {
   const selectedCategoria = ref<Categoria | null>(null);
 
   const obterDataAtualFormatada = () => {
-    const dataAtual = new Date();
-
-    const mesAtual = dataAtual.getMonth();
-    const dataUmMesDepois = new Date();
-    dataUmMesDepois.setMonth(mesAtual + 1);
-
-    return format(dataUmMesDepois, "yyyy-MM-dd");
+    console.log('1')
+    return moment(new Date()).format("yyyy-MM-DD");
   };
 
-  const dtLancamento = ref(obterDataAtualFormatada());
+  //const dtLancamento = ref(obterDataAtualFormatada());
+  const dtLancamento = ref<string | null>(null);
 
   // Actions
   const getGastos = async () => {
@@ -65,7 +62,8 @@ export const gastoStore = defineStore("gastoStore", () => {
     vlrTotal.value = null;
     pago.value = "N";
     tpLancamento.value = "";
-    dtLancamento.value = obterDataAtualFormatada();
+    //dtLancamento.value = obterDataAtualFormatada();
+    dtLancamento.value = null;
     selectedCartao.value = null;
     selectedGrupo.value = null;
     selectedFormaPagto.value = null;
